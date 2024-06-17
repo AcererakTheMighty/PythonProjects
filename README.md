@@ -8,4 +8,5 @@ Quiz Game: This is just a simple program where it asks the player questions rega
 Number Guessing Game: Self explanatory, a basic program game where the player needs to guess a number correctly. 
 RockPaperScissors: Self explanatory.
 CYOA: Self explanatory.
-Password Manager: A program for storing passwords, currently unfinished
+Password Manager: A program for storing passwords
+PIG: A program that simulates the dice game "Pig". 
