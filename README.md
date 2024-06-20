@@ -10,3 +10,5 @@ RockPaperScissors: Self explanatory.
 CYOA: Self explanatory.
 Password Manager: A program for storing passwords
 PIG: A program that simulates the dice game "Pig". 
+Math Questions: A simple program that challenges you with simple math questions. 
+Slot Machine: Self explanatory. 
