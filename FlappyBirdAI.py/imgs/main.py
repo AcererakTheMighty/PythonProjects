@@ -8,6 +8,7 @@ pygame.font.init()
 # Constants for the game window
 WIN_WIDTH = 500
 WIN_HEIGHT = 800
+GEN = 0
 
 # Load images and scale them
 BIRD_IMGS = [
@@ -85,13 +86,13 @@ class Bird:
         return pygame.mask.from_surface(self.img)
 
 class Pipe:
-    GAP = 200
+    GAP = 250
     VEL = 5
 
     def __init__(self, x):
         self.x = x
         self.height = 0
-        self.gap = 100
+        self.gap = 250
 
         self.top = 0
         self.bottom = 0
@@ -124,9 +125,9 @@ class Pipe:
         b_point = bird_mask.overlap(bottom_mask, bottom_offset)
         t_point = bird_mask.overlap(top_mask, top_offset)
 
-        if t_point or b_point:
+        if b_point or t_point:
             return True
-        
+    
         return False
 
 class Base:
@@ -153,13 +154,16 @@ class Base:
         win.blit(self.IMG, (self.x1, self.y))
         win.blit(self.IMG, (self.x2, self.y))
 
-def draw_window(win, birds, pipes, base, score):
+def draw_window(win, birds, pipes, base, score, gen):
     win.blit(BG_IMG, (0, 0))
     for pipe in pipes:
         pipe.draw(win)
     
     text = STAT_FONT.render("Score: " + str(score), 1, (255, 255, 255))
     win.blit(text, (WIN_WIDTH - 10 - text.get_width(), 10))
+
+    text = STAT_FONT.render("Gen: " + str(gen), 1, (255, 255, 255))
+    win.blit(text, (10, 10))
 
     base.draw(win)
 
@@ -170,6 +174,9 @@ def draw_window(win, birds, pipes, base, score):
     pygame.display.update()
 
 def main(genomes, config):
+    global GEN 
+    GEN += 1
+    
     nets = []
     ge = []
     birds = []
@@ -187,8 +194,8 @@ def main(genomes, config):
     clock = pygame.time.Clock()
 
     score = 0
-
     run = True
+
     while run:
         clock.tick(30)
         for event in pygame.event.get():
@@ -207,7 +214,7 @@ def main(genomes, config):
 
         for x, bird in enumerate(birds):
             bird.move()
-            ge[x].fitness += 0.1
+            ge[x].fitness += 0.1  # Small fitness for staying alive
 
             output = nets[x].activate((bird.y, abs(bird.y - pipes[pipe_ind].height), abs(bird.y - pipes[pipe_ind].bottom)))
 
@@ -219,7 +226,7 @@ def main(genomes, config):
         for pipe in pipes:
             for x, bird in enumerate(birds):
                 if pipe.collide(bird):
-                    ge[x].fitness -= 1
+                    ge[x].fitness -= 1  # Penalize for collisions
                     birds.pop(x)
                     nets.pop(x)
                     ge.pop(x)
@@ -236,7 +243,7 @@ def main(genomes, config):
         if add_pipe:
             score += 1
             for g in ge:
-                g.fitness += 5
+                g.fitness += 5  # Reward for passing pipes
             pipes.append(Pipe(700))
 
         for r in rem:
@@ -249,7 +256,7 @@ def main(genomes, config):
                 ge.pop(x)
 
         base.move()
-        draw_window(win, birds, pipes, base, score)
+        draw_window(win, birds, pipes, base, score, GEN)
 
     pygame.quit()
     quit()
