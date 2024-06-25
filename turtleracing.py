@@ -29,7 +29,7 @@ def race(colors):
 
             x, y = racer.pos()
             if y >= HEIGHT // 2 - 10:
-                return colors[turtles.index(turtle)]
+                return colors[turtles.index(racer)]
 
 def create_turtles(colors):
     turtles = []
@@ -53,6 +53,10 @@ def init_turtle():
 
 racers = get_number_of_racers()
 init_turtle()
+
 random.shuffle(COLORS)
 colors = COLORS[:racers]
-race(colors)
+
+winner = race(colors)
+print(f"The Winner is the {winner} turtle")
+time.sleep(5)
