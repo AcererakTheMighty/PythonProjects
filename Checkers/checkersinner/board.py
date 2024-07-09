@@ -1,11 +1,10 @@
 import pygame
-from checkersinner.constants import BLACK, ROWS, RED, SQUARE_SIZE, COLS, WHITE
-from checkersinner.piece import Piece
+from .constants import BLACK, ROWS, RED, SQUARE_SIZE, COLS, WHITE
+from .piece import Piece
 
 class Board:
     def __init__(self):
         self.board = []
-        self.selected_piece = None
         self.red_left = self.white_left = 12
         self.red_kings = self.white_kings = 0
         self.create_board()
@@ -51,3 +50,21 @@ class Board:
                 piece = self.board[row][col]
                 if piece != 0:
                     piece.draw(win)
+
+    def get_valid_moves(self, piece):
+        moves = {}
+        left = piece.col - 1
+        rigt = piece.col + 1
+        row = piece.row
+
+        if piece.color == RED or piece.king:
+            pass
+
+        if piece.color == WHITE or piece.king:
+            pass
+
+    def _traverse_left(self, start, stop, step, color, left, skipped=[]):
+        pass
+
+    def _traverse_right(self, start, stop, step, color, left, skipped=[]):
+        pass

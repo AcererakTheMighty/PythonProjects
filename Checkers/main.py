@@ -1,6 +1,7 @@
 import pygame
 from checkersinner.constants import WIDTH, HEIGHT, SQUARE_SIZE
 from checkersinner.board import Board
+from checkersinner.game import Game
 
 
 
@@ -21,6 +22,7 @@ def main():
     run = True
     clock = pygame.time.Clock()
     board = Board()
+    game = Game(WIN)
 
     piece = board.get_piece(0,1)
   
@@ -38,8 +40,7 @@ def main():
                 piece = board.get_piece(row, col)
                 board.move(piece, 4, 3)
 
-        board.draw(WIN)
-        pygame.display.update()
+        game.update()
 
     pygame.quit()
 
