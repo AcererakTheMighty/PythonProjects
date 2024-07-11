@@ -19,7 +19,7 @@ class Board:
         self.board[piece.row][piece.col], self.board[row][col] = self.board[row][col], self.board[piece.row][piece.col]
         piece.move(row, col)
 
-        if row == ROWS or row == 0:
+        if row == ROWS - 1 or row == 0:
             piece.make_king()
             if piece.color == WHITE:
                 self.white_kings += 1
@@ -51,6 +51,23 @@ class Board:
                 if piece != 0:
                     piece.draw(win)
 
+    def remove(self,pieces):
+        for piece in pieces:
+            self.board[piece.row][piece.col] = 0
+            if piece != 0:
+                if piece.color == RED:
+                    self.red_left -= 1
+                else:
+                    self.white_left -= 1
+
+    def winner(self):
+        if self.red_left <= 0:
+            return WHITE
+        elif self.white_left <= 0:
+            return RED
+        
+        return None
+
     def get_valid_moves(self, piece):
         moves = {}
         left = piece.col - 1
@@ -59,11 +76,11 @@ class Board:
 
         if piece.color == RED or piece.king:
             moves.update(self._traverse_left(row -1, max(row-3, -1), -1, piece.color, left))
-            moves.update(self._traverse_left(row -1, max(row-3, -1), -1, piece.color, left))
+            moves.update(self._traverse_right(row -1, max(row-3, -1), -1, piece.color, left))
 
         if piece.color == WHITE or piece.king:
-            moves.update(self._traverse_left(row +1, max(row+3, ROWS), 1, piece.color, left))
-            moves.update(self._traverse_left(row +1, max(row+3, ROWS), 1, piece.color, left))
+            moves.update(self._traverse_left(row +1, min(row+3, ROWS), 1, piece.color, left))
+            moves.update(self._traverse_right(row +1, min(row+3, ROWS), 1, piece.color, left))
 
         return moves
 
@@ -91,8 +108,7 @@ class Board:
 
                     moves.update(self._traverse_left(r+step, row, step, color, left-1, skipped=last))
                     moves.update(self._traverse_right(r+step, row, step, color, left+1, skipped=last))
-                    break
-
+                break
 
             elif current.color == color:
                 break
@@ -135,4 +151,4 @@ class Board:
                 last = [current]
             right += 1
         
-        return moves
+        return moves 
